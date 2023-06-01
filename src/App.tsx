@@ -4,8 +4,18 @@ import StyledDiv from "./StyledDiv";
 function App() {
   const [total, setTotal] = useState(0)
   const [pagesCheckBoxStatus, setPagesCheckBoxStatus] = useState(false)
+  const [consultantCheckBoxStatus, setConsultantCheckBoxStatus] = useState(false)
+  const [campaingCheckBoxStatus, setCampaingPagesCheckBoxStatus] = useState(false)
   const [numberOfPages, setNumberOfPages] = useState(0)
   const [numberOfLanguages, setNumberOfLanguages] = useState(0)
+
+  const calculateTotal = () => {
+    let newTotal: number = 0;    
+    if (pagesCheckBoxStatus) newTotal = numberOfPages * numberOfLanguages * 30 + 500;
+    if (consultantCheckBoxStatus) newTotal += 300;
+    if (campaingCheckBoxStatus) newTotal += 200; 
+    setTotal(newTotal);
+  }
 
   const handleChangeOfCheckBox = (price: number, isChecked: boolean, id: string) => {
     isChecked ? setTotal(total + price) : setTotal(total - price);
@@ -31,6 +41,8 @@ function App() {
     e.preventDefault();
     if (numberOfPages > 0) setNumberOfPages(numberOfPages - 1);
     if (numberOfPages > 0 && numberOfLanguages > 0) setTotal(numberOfPages * numberOfLanguages * 30 + total);
+    console.log(`numberOfPages: ${numberOfPages}`)
+    console.log(`numberOfLanguages: ${numberOfLanguages}`)
   }
 
   const handleIncreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
