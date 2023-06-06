@@ -3,11 +3,14 @@ import StyledDiv from "./StyledDiv";
 
 function App() {
   const [total, setTotal] = useState(0)
+
+  const [numberOfPages, setNumberOfPages] = useState(1)
+  const [numberOfLanguages, setNumberOfLanguages] = useState(1)
+
   const [pagesCheckBoxStatus, setPagesCheckBoxStatus] = useState(false)
   const [consultantCheckBoxStatus, setConsultantCheckBoxStatus] = useState(false)
   const [campaingCheckBoxStatus, setCampaingPagesCheckBoxStatus] = useState(false)
-  const [numberOfPages, setNumberOfPages] = useState(0)
-  const [numberOfLanguages, setNumberOfLanguages] = useState(0)
+
 
   const calculateTotal = () => {
     let newTotal: number = 0;    
@@ -19,53 +22,44 @@ function App() {
 
   const handleChangeOfCheckBox = (price: number, isChecked: boolean, id: string) => {
     isChecked ? setTotal(total + price) : setTotal(total - price);
-    if (id === "pagesCheckBox") {
-      setPagesCheckBoxStatus(isChecked);   
-    
+    switch(id){
+      case 'pagesCheckBox':
+        setPagesCheckBoxStatus(isChecked);       
+        break;
+      case 'consultantCheckBox':
+        setConsultantCheckBoxStatus(isChecked);
+        break;
+      case 'campaingCheckBox':
+        setCampaingPagesCheckBoxStatus(isChecked);
+        break;
     }
-    console.log(`id: ${id}`);
+    calculateTotal();
   }
 
   const handleIncreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setNumberOfPages(numberOfPages + 1);
-    if (numberOfPages > 0 && numberOfLanguages > 0) {
-      console.log(`in`);
-      setTotal(numberOfPages * numberOfLanguages * 30 + total);
-    }
-    console.log(`numberOfPages: ${numberOfPages}`)
-    console.log(`numberOfLanguages: ${numberOfLanguages}`)
+    calculateTotal();
   }
 
   const handleDecreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    if (numberOfPages > 0) setNumberOfPages(numberOfPages - 1);
-    if (numberOfPages > 0 && numberOfLanguages > 0) setTotal(numberOfPages * numberOfLanguages * 30 + total);
-    console.log(`numberOfPages: ${numberOfPages}`)
-    console.log(`numberOfLanguages: ${numberOfLanguages}`)
+    if (numberOfPages > 1) setNumberOfPages(numberOfPages - 1);
+    calculateTotal();
   }
 
   const handleIncreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setNumberOfLanguages(numberOfLanguages + 1);
-    if (numberOfPages > 0 && numberOfLanguages > 0) {
-      console.log(`in`);
-      setTotal(numberOfPages * numberOfLanguages * 30 + total);
-    }
-    console.log(`numberOfPages: ${numberOfPages}`)
-    console.log(`numberOfLanguages: ${numberOfLanguages}`)
-
+    calculateTotal();
   }
 
   const handleDecreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    setNumberOfLanguages(numberOfLanguages - 1);
-    if (numberOfPages > 0 && numberOfLanguages > 0) {
-      console.log(`in`);
-      setTotal(numberOfPages * numberOfLanguages * 30 + total);
+    if (numberOfLanguages > 1) {
+      setNumberOfLanguages(numberOfLanguages - 1);
     }
-    console.log(`numberOfPages: ${numberOfPages}`)
-    console.log(`numberOfLanguages: ${numberOfLanguages}`)
+    calculateTotal();
   }
 
   return (
@@ -76,18 +70,18 @@ function App() {
           <div>
             <label>Número de pàginas</label>
             <button onClick={(e) => handleIncreaseNumberOfPages(e)}>+</button>
-            <input id="pages" type="text" value={numberOfPages} onChange={() => { }} />
+            <input id="pages" type="text" value={numberOfPages}  />
             <button onClick={(e) => handleDecreaseNumberOfPages(e)}>-</button>
           </div>
           <div>
             <label>Número d'idiomas</label>
             <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
-            <input id="languages" type="text" value={numberOfLanguages} onChange={() => { }} />
+            <input id="languages" type="text" value={numberOfLanguages} />
             <button onClick={(e) => handleDecreaseNumberOfLanguages(e)}>-</button>
           </div>
         </StyledDiv>
-        <input id="cb2" type="checkbox" onChange={(e) => handleChangeOfCheckBox(300, e.target.checked, e.target.id)} /> Una consultoria SEO (300 €) <br />
-        <input id="cb3" type="checkbox" onChange={(e) => handleChangeOfCheckBox(200, e.target.checked, e.target.id)} /> Una campanya de Google Ads (200 €) <br />
+        <input id="consultantCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(300, e.target.checked, e.target.id)} /> Una consultoria SEO (300 €) <br />
+        <input id="campaingCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(200, e.target.checked, e.target.id)} /> Una campanya de Google Ads (200 €) <br />
       </form>
       <p>Preu:</p>{total}
     </>
