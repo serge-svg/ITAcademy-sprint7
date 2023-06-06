@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StyledDiv from "./StyledDiv";
 
 function App() {
@@ -11,6 +11,9 @@ function App() {
   const [consultantCheckBoxStatus, setConsultantCheckBoxStatus] = useState(false)
   const [campaingCheckBoxStatus, setCampaingPagesCheckBoxStatus] = useState(false)
 
+  useEffect(() => {
+    calculateTotal();
+  }, [pagesCheckBoxStatus, consultantCheckBoxStatus, campaingCheckBoxStatus, numberOfPages, numberOfLanguages])
 
   const calculateTotal = () => {
     let newTotal: number = 0;    
@@ -21,37 +24,38 @@ function App() {
   }
 
   const handleChangeOfCheckBox = (price: number, isChecked: boolean, id: string) => {
-    isChecked ? setTotal(total + price) : setTotal(total - price);
     switch(id){
       case 'pagesCheckBox':
-        setPagesCheckBoxStatus(isChecked);       
+        setPagesCheckBoxStatus(currentState => {return !currentState});   
         break;
       case 'consultantCheckBox':
-        setConsultantCheckBoxStatus(isChecked);
+        setConsultantCheckBoxStatus(currentState => {return !currentState});   
         break;
       case 'campaingCheckBox':
-        setCampaingPagesCheckBoxStatus(isChecked);
+        setCampaingPagesCheckBoxStatus(currentState => {return !currentState});   
+        //console.log('pagesCheckBox: '+ pagesCheckBoxStatus)
+        //console.log('consultantCheckBox: '+ consultantCheckBoxStatus)
+        //console.log('campaingCheckBox: '+ campaingCheckBoxStatus)
         break;
     }
-    calculateTotal();
+    
   }
 
   const handleIncreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setNumberOfPages(numberOfPages + 1);
-    calculateTotal();
   }
 
   const handleDecreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    if (numberOfPages > 1) setNumberOfPages(numberOfPages - 1);
-    calculateTotal();
+    if (numberOfPages > 1) {
+      setNumberOfPages(numberOfPages - 1);
+    }
   }
 
   const handleIncreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setNumberOfLanguages(numberOfLanguages + 1);
-    calculateTotal();
   }
 
   const handleDecreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
@@ -59,30 +63,27 @@ function App() {
     if (numberOfLanguages > 1) {
       setNumberOfLanguages(numberOfLanguages - 1);
     }
-    calculateTotal();
   }
 
   return (
     <>
-      <form >
         <input id="pagesCheckBox" type="checkbox" onChange={(e) => { handleChangeOfCheckBox(500, e.target.checked, e.target.id) }} /> Una pàgina web (500 €) <br />
         <StyledDiv visible={pagesCheckBoxStatus}>
           <div>
             <label>Número de pàginas</label>
             <button onClick={(e) => handleIncreaseNumberOfPages(e)}>+</button>
-            <input id="pages" type="text" value={numberOfPages}  />
+            <input id="pages" type="text" value={numberOfPages} onChange={()=>{}} />
             <button onClick={(e) => handleDecreaseNumberOfPages(e)}>-</button>
           </div>
           <div>
             <label>Número d'idiomas</label>
             <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
-            <input id="languages" type="text" value={numberOfLanguages} />
+            <input id="languages" type="text" value={numberOfLanguages} onChange={()=>{}}/>
             <button onClick={(e) => handleDecreaseNumberOfLanguages(e)}>-</button>
           </div>
         </StyledDiv>
         <input id="consultantCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(300, e.target.checked, e.target.id)} /> Una consultoria SEO (300 €) <br />
         <input id="campaingCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(200, e.target.checked, e.target.id)} /> Una campanya de Google Ads (200 €) <br />
-      </form>
       <p>Preu:</p>{total}
     </>
   );
