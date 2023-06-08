@@ -1,0 +1,32 @@
+[
+    {
+        "id": 0,
+        "label": "Website",
+        "type": "checkbox",
+        "value": 500
+    },
+    {
+        "id": 1,
+        "label": "SEO",
+        "type": "checkbox",
+        "value": 300
+    },
+    {
+        "id": 2,
+        "label": "Ads campaing",
+        "type": "checkbox",
+        "value": 200
+    },
+    {
+        "id": 3,
+        "label": "Number og pages",
+        "type": "number",
+        "value": 1
+    },
+    {
+        "id": 4,
+        "label": "Number of languages",
+        "type": "number",
+        "value": 1
+    }
+]

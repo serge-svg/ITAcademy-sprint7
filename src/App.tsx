@@ -2,6 +2,58 @@ import { useEffect, useState } from "react";
 import StyledDiv from "./StyledDiv";
 
 function App() {
+  
+  type newFieldsValue = {
+    web: boolean;
+    seo: boolean;
+    ads: boolean;
+    pages: string;
+    languages: string;
+  }
+
+  const initialFieldsValue: newFieldsValue = {
+    web: false,
+    seo: false,
+    ads: false,
+    pages: '1',
+    languages: '1',
+  };
+
+  
+  const fields = [
+    {
+        "id": 0,
+        "label": "Website",
+        "type": "checkbox",
+        "value": 500
+    },
+    {
+        "id": 1,
+        "label": "SEO",
+        "type": "checkbox",
+        "value": 300
+    },
+    {
+        "id": 2,
+        "label": "Ads campaing",
+        "type": "checkbox",
+        "value": 200
+    },
+    {
+        "id": 3,
+        "label": "Number og pages",
+        "type": "number",
+        "value": 30
+    },
+    {
+        "id": 4,
+        "label": "Number of languages",
+        "type": "number",
+        "value": 30
+    }
+]
+  // STATES
+  const [fieldsValue, setFieldsValue] = useState(initialFieldsValue);
   const [total, setTotal] = useState(0)
 
   const [numberOfPages, setNumberOfPages] = useState(1)
@@ -11,9 +63,17 @@ function App() {
   const [consultantCheckBoxStatus, setConsultantCheckBoxStatus] = useState(false)
   const [campaingCheckBoxStatus, setCampaingPagesCheckBoxStatus] = useState(false)
 
+  // EFFECTS
   useEffect(() => {
     calculateTotal();
-  }, [pagesCheckBoxStatus, consultantCheckBoxStatus, campaingCheckBoxStatus, numberOfPages, numberOfLanguages])
+  }, [fieldsValue])
+
+  // LOGIC
+  const updateFieldsValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let  newFieldsValue: newFieldsValue = { ...fieldsValue };    
+    newFieldsValue[e.target.id] = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    setFieldsValue(newFieldsValue);
+  }
 
   const calculateTotal = () => {
     let newTotal: number = 0;    
@@ -67,23 +127,23 @@ function App() {
 
   return (
     <>
-        <input id="pagesCheckBox" type="checkbox" onChange={(e) => { handleChangeOfCheckBox(500, e.target.checked, e.target.id) }} /> Una pàgina web (500 €) <br />
+        <input id="web" type="checkbox" onChange={updateFieldsValue} /> Una pàgina web (500 €) <br />
         <StyledDiv visible={pagesCheckBoxStatus}>
           <div>
             <label>Número de pàginas</label>
-            <button onClick={(e) => handleIncreaseNumberOfPages(e)}>+</button>
-            <input id="pages" type="text" value={numberOfPages} onChange={()=>{}} />
             <button onClick={(e) => handleDecreaseNumberOfPages(e)}>-</button>
+            <input id="pages" type="number" value={numberOfPages} onChange={()=>{}} />
+            <button onClick={(e) => handleIncreaseNumberOfPages(e)}>+</button>
           </div>
           <div>
             <label>Número d'idiomas</label>
-            <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
-            <input id="languages" type="text" value={numberOfLanguages} onChange={()=>{}}/>
             <button onClick={(e) => handleDecreaseNumberOfLanguages(e)}>-</button>
+            <input id="languages" type="number" value={numberOfLanguages} onChange={()=>{}}/>
+            <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
           </div>
         </StyledDiv>
-        <input id="consultantCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(300, e.target.checked, e.target.id)} /> Una consultoria SEO (300 €) <br />
-        <input id="campaingCheckBox" type="checkbox" onChange={(e) => handleChangeOfCheckBox(200, e.target.checked, e.target.id)} /> Una campanya de Google Ads (200 €) <br />
+        <input id="seo" type="checkbox" onChange={updateFieldsValue} /> Una consultoria SEO (300 €) <br />
+        <input id="ads" type="checkbox" onChange={updateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
       <p>Preu:</p>{total}
     </>
   );
