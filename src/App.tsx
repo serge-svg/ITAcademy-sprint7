@@ -20,38 +20,34 @@ function App() {
   const [numberOfPages, setNumberOfPages] = useState(1)
   const [numberOfLanguages, setNumberOfLanguages] = useState(1)
 
-  // Checkbox fields state
-  const [checkBoxFieldsState, setCheckBoxFieldsState] = useState(
-    new Array(fields.filter(item => item.type === "checkbox").length).fill(false)
-  );
-
-  /*
-  const [pagesCheckBoxStatus, setPagesCheckBoxStatus] = useState(false)
-  const [consultantCheckBoxStatus, setConsultantCheckBoxStatus] = useState(false)
-  const [campaingCheckBoxStatus, setCampaingPagesCheckBoxStatus] = useState(false)
-  */
-
-  // EFFECTS
+    // EFFECTS
   useEffect(() => {
     calculateTotal();
+    console.log(fieldsValue);    
   }, [fieldsValue])
 
-  // LOGIC
-  /*
+  // LOGIC  
   const updateCheckboxFields = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newFieldsValue: fieldsType = { ...fields };    
-
-    newFieldsValue[e.target.id] = e.target.id
-    e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setFieldsValue(newFieldsValue);
+    const fieldsValueClone = [ ...fieldsValue ];
+    const tempField = fieldsValueClone.find(item => item.id === parseInt(e.target.id));    
+    if (tempField && e.target.type === 'checkbox') tempField.value = e.target.checked;
+    if (tempField && e.target.type === 'checkbox') tempField.value = e.target.checked;
+    setFieldsValue(fieldsValueClone);
+    calculateTotal();
   }
-  */
+  
   const calculateTotal = () => {
-    let newTotal: number = 0;    
-    //if (pagesCheckBoxStatus) newTotal = numberOfPages * numberOfLanguages * 30 + 500;
-    //if (consultantCheckBoxStatus) newTotal += 300;
-    //if (campaingCheckBoxStatus) newTotal += 200; 
+    let newTotal = 0; 
+    fieldsValue.forEach(item => {
+      if (item.type === "checkbox" && item.value && !item.childs) newTotal += item.extraValue;
+      if (item.type === "checkbox" && item.value && item.childs) {
+        let pagesAndLanguages = 1;
+        item.childs.forEach(child => pagesAndLanguages = pagesAndLanguages * child.value);
+        newTotal = newTotal + pagesAndLanguages * 30;
+      }
+    })   
     setTotal(newTotal);
+    console.log(newTotal);
   }
 
   const handleUpdateFieldsValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +55,7 @@ function App() {
     switch(e.target.type){
       case 'checkbox':     
         console.log('checkBox');
-        //setPagesCheckBoxStatus(currentState => {return !currentState});   
+        updateCheckboxFields(e.target.id, e.target.checked)
         break;
       case 'number':
         console.log('number');
@@ -67,10 +63,6 @@ function App() {
         break;
       case 'text':
         console.log('text');
-        //setCampaingPagesCheckBoxStatus(currentState => {return !currentState});   
-        //console.log('pagesCheckBox: '+ pagesCheckBoxStatus)
-        //console.log('consultantCheckBox: '+ consultantCheckBoxStatus)
-        //console.log('campaingCheckBox: '+ campaingCheckBoxStatus)
         break;
     }
     
@@ -117,8 +109,8 @@ function App() {
             <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
           </div>
         </StyledDiv>
-        <input id="seo" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
-        <input id="ads" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
+        <input id="1" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
+        <input id="2" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
       <p>Preu:</p>{total}
     </>
   );

@@ -32,7 +32,7 @@
         "label": "Ads campaing",
         "type": "checkbox",
         "value": false,
-        "extraValue": 300
+        "extraValue": 200
     }
 
 ]
