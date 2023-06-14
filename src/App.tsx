@@ -91,25 +91,41 @@ function App() {
   }
 
   return (
-    <>
-      { fields.forEach((item) => {
-        console.log('type: ' + item.type);
-        if (item.type === "checkbox") {
+    <div>
+      { fields.map((item) => {
+        if (item.type === "checkbox") {          
           console.log('I am a checkbox');
-          <>
+          return (        
           <Checkbox 
-              key={1}
-              id={1}
-              label={"item.label"}
-              checked={true}
-              value={10}              
+              key={item.id}
+              id={item.id}
+              checked={item.checked}
+              label={item.label}
+              onChange={handleUpdateFieldsValue}
           />
-          </>          
-        }
-      })           
-      }  
-    
-        {/*
+          );
+        } else if (item.type === "number") {
+          return (
+          <StyledDiv visible={fieldsValue[0].checked ? true : false}>
+          <div key={item.id}>
+            <label>{item.label}</label>
+            <input
+              type="number"
+              value={item.value}
+            />
+          </div>
+          </StyledDiv>
+          );
+      }
+    })}
+    <p>Total price:</p>{total}
+    </div>
+  )
+}
+
+export default App;
+
+/*
         <StyledDiv visible={fieldsValue[0].checked ? true : false}>
           <div>
             <label>Número de pàginas</label>
@@ -127,9 +143,4 @@ function App() {
         <input id="3" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
         <input id="4" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
       <p>Preu:</p>{total}
-    */}
-    </>
-  );
-}
-
-export default App;
+*/
