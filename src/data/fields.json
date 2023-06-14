@@ -3,36 +3,36 @@
         "id": 0,
         "label": "Website",
         "type": "checkbox",
-        "value": false,
-        "extraValue": 500,
-        "childs": [
-            {
-                "id": 0,
-                "label": "Number og pages",
-                "type": "number",
-                "value": 1
-            },
-            {
-                "id": 1,
-                "label": "Number of languages",
-                "type": "number",
-                "value": 1
-            }
-        ]
+        "checked": false,
+        "value": 500
     },
     {
         "id": 1,
-        "label": "SEO",
-        "type": "checkbox",
-        "value": false,
-        "extraValue": 300
+        "label": "Number og pages",
+        "type": "number",
+        "value": 1,
+        "parentId": 0
     },
     {
         "id": 2,
+        "label": "Number of languages",
+        "type": "number",
+        "value": 1,
+        "parentId": 0
+    },
+    {
+        "id": 3,
+        "label": "SEO",
+        "type": "checkbox",
+        "checked": false,
+        "value": 300
+    },
+    {
+        "id": 4,
         "label": "Ads campaing",
         "type": "checkbox",
-        "value": false,
-        "extraValue": 200
+        "checked": false,
+        "value": 200
     }
 
 ]

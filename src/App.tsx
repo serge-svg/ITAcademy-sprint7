@@ -4,113 +4,110 @@ import fields from "./data/fields.json";
 
 function App() {
 
-  type fieldsType = {
-    id: number;
-    label: string;
-    type: string;
-    value: boolean | string | number;
-    extraValue?: boolean | string | number;
-    childs?: [];
-  }
-
-    // STATES
+  // STATES
   const [fieldsValue, setFieldsValue] = useState(fields);
-  const [total, setTotal] = useState(0)
+  const [total, setTotal] = useState(0);
 
-  const [numberOfPages, setNumberOfPages] = useState(1)
-  const [numberOfLanguages, setNumberOfLanguages] = useState(1)
+  const [numberOfPages, setNumberOfPages] = useState(1);
+  const [numberOfLanguages, setNumberOfLanguages] = useState(1);
 
-    // EFFECTS
+  // EFFECTS
   useEffect(() => {
     calculateTotal();
-    console.log(fieldsValue);    
   }, [fieldsValue])
 
   // LOGIC  
-  const updateCheckboxFields = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUpdateFieldsValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleUpdateFieldsValue');
+    
     const fieldsValueClone = [ ...fieldsValue ];
     const tempField = fieldsValueClone.find(item => item.id === parseInt(e.target.id));    
-    if (tempField && e.target.type === 'checkbox') tempField.value = e.target.checked;
-    if (tempField && e.target.type === 'checkbox') tempField.value = e.target.checked;
+
+    if (tempField && e.target.type === 'checkbox') tempField.checked = e.target.checked;
+    if (tempField && e.target.type === 'number') tempField.value = parseFloat(e.target.value);
+    
     setFieldsValue(fieldsValueClone);
-    calculateTotal();
   }
   
   const calculateTotal = () => {
+    console.log('calculateTotal');
+
     let newTotal = 0; 
+    let websiteTotal = 0; 
+
     fieldsValue.forEach(item => {
-      if (item.type === "checkbox" && item.value && !item.childs) newTotal += item.extraValue;
-      if (item.type === "checkbox" && item.value && item.childs) {
-        let pagesAndLanguages = 1;
-        item.childs.forEach(child => pagesAndLanguages = pagesAndLanguages * child.value);
-        newTotal = newTotal + pagesAndLanguages * 30;
+      if (item.type === "checkbox" && item.checked && !item.parentId) newTotal += item.value;
+      if (item.type === "number" && item.value && item.parentId === 0 && fieldsValue[0].checked) {
+        if (websiteTotal === 0) websiteTotal = 30;
+        websiteTotal = websiteTotal * item.value;
       }
     })   
-    setTotal(newTotal);
-    console.log(newTotal);
+    setTotal(newTotal + websiteTotal);
   }
 
-  const handleUpdateFieldsValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('e.target.type: ' + e.target.type);
-    switch(e.target.type){
-      case 'checkbox':     
-        console.log('checkBox');
-        updateCheckboxFields(e.target.id, e.target.checked)
-        break;
-      case 'number':
-        console.log('number');
-        //setConsultantCheckBoxStatus(currentState => {return !currentState});   
-        break;
-      case 'text':
-        console.log('text');
-        break;
-    }
-    
-  }
-
-  const handleIncreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
+  const handleIncreaseNumberOfPages = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setNumberOfPages(numberOfPages + 1);
+
+    const fieldsValueClone = [ ...fieldsValue ];
+    const tempField = fieldsValueClone.find(item => item.id === 1);
+    if (tempField) tempField.value = tempField.value + 1;
+    setFieldsValue(fieldsValueClone);
   }
 
-  const handleDecreaseNumberOfPages = (e: { preventDefault: () => void; }) => {
+  const handleDecreaseNumberOfPages = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (numberOfPages > 1) {
       setNumberOfPages(numberOfPages - 1);
     }
+
+    const fieldsValueClone = [ ...fieldsValue ];
+    const tempField = fieldsValueClone.find(item => item.id === 1);
+    if (tempField) tempField.value = tempField.value - 1;
+    setFieldsValue(fieldsValueClone);
   }
 
-  const handleIncreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
+  const handleIncreaseNumberOfLanguages = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setNumberOfLanguages(numberOfLanguages + 1);
+
+    const fieldsValueClone = [ ...fieldsValue ];
+    const tempField = fieldsValueClone.find(item => item.id === 2);
+    if (tempField) tempField.value = tempField.value + 1;
+    setFieldsValue(fieldsValueClone);
   }
 
-  const handleDecreaseNumberOfLanguages = (e: { preventDefault: () => void; }) => {
+  const handleDecreaseNumberOfLanguages = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     if (numberOfLanguages > 1) {
       setNumberOfLanguages(numberOfLanguages - 1);
     }
+
+    const fieldsValueClone = [ ...fieldsValue ];
+    const tempField = fieldsValueClone.find(item => item.id === 2);
+    if (tempField) tempField.value = tempField.value - 1;
+    setFieldsValue(fieldsValueClone);
   }
 
   return (
     <>
         <input id="0" type="checkbox" onChange={handleUpdateFieldsValue} /> Una pàgina web (500 €) <br />
-        <StyledDiv visible={true}>
+        <StyledDiv visible={fieldsValue[0].checked ? true : false}>
           <div>
             <label>Número de pàginas</label>
             <button onClick={(e) => handleDecreaseNumberOfPages(e)}>-</button>
-            <input id="pages" type="number" value={numberOfPages} onChange={()=>{}} />
+            <input id="1" type="number" value={numberOfPages} onChange={handleUpdateFieldsValue} />
             <button onClick={(e) => handleIncreaseNumberOfPages(e)}>+</button>
           </div>
           <div>
             <label>Número d'idiomas</label>
             <button onClick={(e) => handleDecreaseNumberOfLanguages(e)}>-</button>
-            <input id="languages" type="number" value={numberOfLanguages} onChange={()=>{}}/>
+            <input id="2" type="number" value={numberOfLanguages} onChange={handleUpdateFieldsValue}/>
             <button onClick={(e) => handleIncreaseNumberOfLanguages(e)}>+</button>
           </div>
         </StyledDiv>
-        <input id="1" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
-        <input id="2" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
+        <input id="3" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
+        <input id="4" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
       <p>Preu:</p>{total}
     </>
   );
