@@ -1,12 +1,25 @@
-type CheckboxOption = {
-    label: string,
-    value: boolean
-}
-
 type CheckboxProps = {
-    options: CheckboxOption[],
-    value: CheckboxOption
-    onChange: (value: CheckboxOption | undefined) => void
+    id: number,
+    label: string,
+    checked: boolean,
+    value: number,
+    //handleUpdateFieldsValue: (e: React.ChangeEvent<HTMLInputElement>) => void    
 }
 
-//export function Checkbox({ options, value, onChange }: CheckboxProps) {}
+const Checkbox = ({ id, label, checked, value }: CheckboxProps) => {
+    return (
+        <>
+          <input 
+            id={id.toString()}
+            type="checkbox"
+            checked={checked}
+            //onChange={(e) => handleUpdateFieldsValue(e)}
+          />
+          <label>
+              {label} {value}
+          </label>
+        </>
+    );
+};
+
+export default Checkbox;

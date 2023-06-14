@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import StyledDiv from "./StyledDiv";
+import Checkbox from "./components/Checkbox";
 import fields from "./data/fields.json";
 
 function App() {
@@ -91,7 +92,24 @@ function App() {
 
   return (
     <>
-        <input id="0" type="checkbox" onChange={handleUpdateFieldsValue} /> Una pàgina web (500 €) <br />
+      { fields.forEach((item) => {
+        console.log('type: ' + item.type);
+        if (item.type === "checkbox") {
+          console.log('I am a checkbox');
+          <>
+          <Checkbox 
+              key={1}
+              id={1}
+              label={"item.label"}
+              checked={true}
+              value={10}              
+          />
+          </>          
+        }
+      })           
+      }  
+    
+        {/*
         <StyledDiv visible={fieldsValue[0].checked ? true : false}>
           <div>
             <label>Número de pàginas</label>
@@ -109,6 +127,7 @@ function App() {
         <input id="3" type="checkbox" onChange={handleUpdateFieldsValue} /> Una consultoria SEO (300 €) <br />
         <input id="4" type="checkbox" onChange={handleUpdateFieldsValue} /> Una campanya de Google Ads (200 €) <br />
       <p>Preu:</p>{total}
+    */}
     </>
   );
 }
