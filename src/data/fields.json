@@ -10,7 +10,6 @@
         "id": 1,
         "label": "Number og pages",
         "type": "number",
-        "checked": false,
         "value": 1,
         "parentId": 0
     },
@@ -18,7 +17,6 @@
         "id": 2,
         "label": "Number of languages",
         "type": "number",
-        "checked": false,
         "value": 1,
         "parentId": 0
     },
