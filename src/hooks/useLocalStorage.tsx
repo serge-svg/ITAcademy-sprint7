@@ -28,7 +28,8 @@ const useLocalStorage = <T,>(
                 console.error(error);
             }
         }    
-    }, [key, value]);
+    }, [value, key]);
+
     return [value, setValue]
 }
 

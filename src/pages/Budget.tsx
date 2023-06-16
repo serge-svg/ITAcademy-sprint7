@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import fields from "../data/fields.json";
-import StyledDiv from "../components/StyledDiv";
+import { StyledDiv, StyledCard } from "../components/StyledComponents";
 import Checkbox from "../components/Checkbox";
 import Counter from "../components/Counter";
-import useLocalStorage from "./hooks/useLocalStorage";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 function Budget() {
 
   // STATES
   const [fieldsValue, setFieldsValue] = useState(fields);
   const [total, setTotal] = useState(0);
-  //const [fieldsValue, setFieldsValue] = useLocalStorage('fields', fields);
+  //const [fieldsValue, setFieldsValue] = useLocalStorage('fields', 0);
+  const [randomNumber, setRandomNumber] = useLocalStorage('randomNumber', 10);
+  setRandomNumber
   
   // EFFECTS
   useEffect(() => {
@@ -52,7 +54,7 @@ function Budget() {
   }
   
   return (
-    <>
+    <StyledCard>
       { fields.map((item) => {
         if (item.type === "checkbox") {          
           return (        
@@ -77,8 +79,12 @@ function Budget() {
         }        
     }
     )}
-    <p>Total price:</p>{total}
-    </>
+    <p>Total price: {total}</p>
+    <div>
+      <button onClick={(e) => {setRandomNumber(Math.floor(Math.random()*100)), e.preventDefault()}}> new value</button>
+      <p>Random number keep in LocalStorage:</p>{randomNumber}
+    </div>
+    </StyledCard>
   )
 }
 
