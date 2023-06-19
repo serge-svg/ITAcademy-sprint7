@@ -3,21 +3,36 @@ import fields from "../data/fields.json";
 import { StyledDiv, StyledCard } from "../components/StyledComponents";
 import Checkbox from "../components/Checkbox";
 import Counter from "../components/Counter";
-import useLocalStorage from "../hooks/useLocalStorage";
 
 function Budget() {
 
   // STATES
-  const [fieldsValue, setFieldsValue] = useState(fields);
+  const fieldsLS = localStorage.getItem('fieldsLS');
+  const [fieldsValue, setFieldsValue] = useState(fieldsLS ? JSON.parse(fieldsLS) : fields);
   const [total, setTotal] = useState(0);
-  //const [fieldsValue, setFieldsValue] = useLocalStorage('fields', 0);
-  const [randomNumber, setRandomNumber] = useLocalStorage('randomNumber', 10);
-  setRandomNumber
+  
+  // INITIAL EFFECTS
+  useEffect(() => {
+    console.log('useEffect 1')
+    getLocalStorage();
+  }, [])
   
   // EFFECTS
   useEffect(() => {
+    console.log('useEffect 0')
     calculateTotal();
+    setLocalStorage();
   }, [fieldsValue])
+
+  const setLocalStorage = () => {
+    localStorage.setItem('fieldsLS', JSON.stringify(fieldsValue));
+  };
+
+  const getLocalStorage = () => {
+    const LS = localStorage.getItem('fieldsLS');
+    if (LS) setFieldsValue(JSON.parse(LS));
+  };
+
 
   // LOGIC  
   const handleUpdateCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,7 +58,7 @@ function Budget() {
   const calculateTotal = () => {
     let newTotal = 0; 
     let websiteTotal = 0; 
-    fieldsValue.forEach(item => {
+    fieldsValue.forEach((item: { type: string; checked: any; parentId: number; value: number; }) => {
       if (item.type === "checkbox" && item.checked && !item.parentId) newTotal += item.value;
       if (item.type === "number" && item.value && item.parentId === 0 && fieldsValue[0].checked) {
         if (websiteTotal === 0) websiteTotal = 30;
@@ -55,7 +70,7 @@ function Budget() {
   
   return (
     <StyledCard>
-      { fields.map((item) => {
+      { fieldsValue.map((item: { type: string; id: number; checked: boolean | undefined; label: string; value: number; }) => {
         if (item.type === "checkbox") {          
           return (        
           <Checkbox 
@@ -80,10 +95,6 @@ function Budget() {
     }
     )}
     <p>Total price: {total}</p>
-    <div>
-      <button onClick={(e) => {setRandomNumber(Math.floor(Math.random()*100)), e.preventDefault()}}> new value</button>
-      <p>Random number keep in LocalStorage:</p>{randomNumber}
-    </div>
     </StyledCard>
   )
 }

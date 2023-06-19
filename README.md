@@ -11,5 +11,9 @@
 ## How to install router and use react-router
 * npm install react-router-dom
 * Add import { BrowserRouter } from "react-router-dom"; in main.tsx
-  *  
+ ![Alt text](image.png)
+* Add import { Link } from "react-router-dom"; /*where needed*/
+ ![Alt text](image-1.png)
+ 
 
+ 
